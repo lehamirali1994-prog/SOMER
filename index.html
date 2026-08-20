@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOMER — Skills Opportunity for Marginalized and Emerging Regions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#16233A;
+    --navy-soft:#233752;
+    --green:#4C8C3C;
+    --green-soft:#DCEBD5;
+    --amber:#D98A34;
+    --amber-soft:#F7E4C9;
+    --paper:#FAF7F1;
+    --paper-dim:#F1ECE0;
+    --ink:#232A2E;
+    --ink-soft:#5B6470;
+    --line:#DFD9C9;
+    --radius:6px;
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{
+    font-family:var(--serif);
+    font-weight:600;
+    line-height:1.15;
+    margin:0 0 .5em;
+    color:var(--navy);
+  }
+  p{margin:0 0 1em;}
+  a{color:inherit;}
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--green);
+    display:flex;
+    align-items:center;
+    gap:.5em;
+    margin-bottom:.9em;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:2px;
+    background:var(--amber);
+    display:inline-block;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+  section{padding:88px 0;position:relative;}
+  @media(max-width:640px){section{padding:56px 0;}}
+
+  /* ---------- top bar ---------- */
+  header.topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,247,241,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1080px;margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .brand-mark{width:30px;height:30px;flex:none;}
+  .brand-word{font-family:var(--serif);font-weight:700;font-size:1.25rem;color:var(--navy);letter-spacing:.01em;}
+  nav.mainnav{display:flex;gap:28px;}
+  nav.mainnav a{
+    font-size:.88rem;font-weight:600;text-decoration:none;color:var(--navy-soft);
+    padding:6px 2px;border-bottom:2px solid transparent;transition:border-color .15s;
+  }
+  nav.mainnav a:hover{border-color:var(--amber);}
+  .nav-cta{
+    background:var(--navy);color:var(--paper)!important;
+    padding:9px 18px;border-radius:100px;font-weight:700!important;
+    border-bottom:none!important;
+  }
+  .nav-cta:hover{background:var(--green);}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--navy);margin:5px 0;}
+  @media(max-width:820px){
+    nav.mainnav{
+      position:fixed;inset:58px 0 auto 0;background:var(--paper);
+      flex-direction:column;padding:18px 28px 26px;gap:4px;
+      border-bottom:1px solid var(--line);
+      transform:translateY(-140%);transition:transform .25s ease;
+    }
+    nav.mainnav.open{transform:translateY(0);}
+    nav.mainnav a{padding:12px 0;border-bottom:1px solid var(--line)!important;}
+    .nav-cta{margin-top:8px;text-align:center;border-bottom:none!important;}
+    .hamburger{display:block;}
+  }
+
+  /* ---------- step rail (signature element) ---------- */
+  .steprail{
+    position:fixed;left:26px;top:50%;transform:translateY(-50%);
+    z-index:40;display:flex;flex-direction:column;align-items:center;gap:0;
+  }
+  .steprail .rail-item{display:flex;flex-direction:column;align-items:center;}
+  .steprail .dot{
+    width:9px;height:9px;border-radius:50%;background:var(--line);
+    border:2px solid var(--paper);transition:background .3s, transform .3s;
+  }
+  .steprail .rail-item.active .dot{background:var(--amber);transform:scale(1.3);}
+  .steprail .rail-item.done .dot{background:var(--green);}
+  .steprail .bar{width:2px;height:34px;background:var(--line);}
+  .steprail .rail-item.done + .bar, .steprail .bar.done{background:var(--green);}
+  .steprail .label{
+    position:absolute;left:22px;white-space:nowrap;font-size:.68rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+    opacity:0;transform:translateX(-6px);transition:opacity .2s, transform .2s;
+    pointer-events:none;
+  }
+  .steprail .rail-item.active .label{opacity:1;transform:translateX(0);color:var(--navy);}
+  @media(max-width:1180px){.steprail{display:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding-top:76px;padding-bottom:70px;
+    background:
+      radial-gradient(ellipse 700px 420px at 82% -10%, var(--green-soft) 0%, transparent 60%),
+      var(--paper);
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;
+  }
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .hero h1{
+    font-size:clamp(2.3rem,4.6vw,3.6rem);
+    letter-spacing:-.01em;
+  }
+  .hero h1 em{
+    font-style:normal;color:var(--green);
+    background:linear-gradient(180deg,transparent 62%, var(--amber-soft) 62%);
+  }
+  .hero .lede{font-size:1.12rem;color:var(--ink-soft);max-width:46ch;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:13px 24px;border-radius:100px;font-weight:700;font-size:.92rem;
+    text-decoration:none;border:1.5px solid transparent;transition:transform .15s, background .15s, color .15s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--navy);color:var(--paper);}
+  .btn-primary:hover{background:var(--green);}
+  .btn-ghost{border-color:var(--navy);color:var(--navy);}
+  .btn-ghost:hover{background:var(--navy);color:var(--paper);}
+  .hero-motto{
+    margin-top:34px;font-family:var(--serif);font-style:italic;color:var(--navy-soft);
+    font-size:1.05rem;border-left:3px solid var(--amber);padding-left:14px;
+  }
+
+  .steps-illustration{position:relative;height:340px;}
+  .step-block{
+    position:absolute;border-radius:8px;
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;
+    box-shadow:0 10px 24px -10px rgba(22,35,58,.25);
+  }
+  .step-block .dot-figure{width:26px;height:26px;border-radius:50%;}
+  .s1{left:0;bottom:0;width:120px;height:110px;background:var(--navy);}
+  .s1 .dot-figure{background:var(--paper);}
+  .s2{left:130px;bottom:0;width:120px;height:190px;background:var(--green);}
+  .s2 .dot-figure{background:var(--paper);}
+  .s3{left:260px;bottom:0;width:120px;height:270px;background:var(--amber);}
+  .s3 .dot-figure{background:var(--navy);}
+  .step-tag{
+    position:absolute;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .s1 + .step-tag{left:0;bottom:-26px;width:120px;text-align:center;}
+  @media(max-width:860px){.steps-illustration{height:230px;transform:scale(.82);transform-origin:left center;}}
+
+  /* ---------- section frame ---------- */
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .section-head p{color:var(--ink-soft);font-size:1.02rem;}
+  .band{background:var(--navy);color:var(--paper);}
+  .band h2, .band .eyebrow{color:var(--paper);}
+  .band .eyebrow{color:var(--amber-soft);}
+  .band .section-head p{color:#B7C0CE;}
+  .band-alt{background:var(--paper-dim);}
+
+  /* quote / motto strip */
+  .mission-strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    background:var(--paper);
+  }
+  .mission-strip .cell{padding:30px 26px;border-right:1px solid var(--line);}
+  .mission-strip .cell:last-child{border-right:none;}
+  .mission-strip .cell h3{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:.7em;}
+  .mission-strip .cell p{margin:0;color:var(--ink);font-size:.98rem;}
+  @media(max-width:760px){.mission-strip{grid-template-columns:1fr;}.mission-strip .cell{border-right:none;border-bottom:1px solid var(--line);}.mission-strip .cell:last-child{border-bottom:none;}}
+
+  /* purpose list */
+  .purpose-list{display:grid;gap:14px;margin-top:8px;}
+  .purpose-item{
+    display:grid;grid-template-columns:44px 1fr;gap:18px;align-items:start;
+    padding:18px 20px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  }
+  .purpose-item .mark{width:44px;height:44px;border-radius:50%;background:var(--green-soft);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;}
+
+  /* objective / value cards */
+  .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  @media(max-width:760px){.card-grid{grid-template-columns:1fr;}}
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 22px;position:relative;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:22px;bottom:22px;width:3px;background:var(--amber);border-radius:3px;
+  }
+  .card h4{font-family:var(--sans);font-weight:700;font-size:.98rem;margin-bottom:.4em;color:var(--navy);}
+  .card p{margin:0;color:var(--ink-soft);font-size:.94rem;}
+
+  .value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:900px){.value-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.value-grid{grid-template-columns:1fr;}}
+  .value-tile{
+    background:var(--navy);color:var(--paper);border-radius:var(--radius);
+    padding:20px 18px;min-height:132px;display:flex;flex-direction:column;justify-content:flex-end;
+    transition:background .2s;
+  }
+  .value-tile:nth-child(4n+2){background:var(--green);}
+  .value-tile:nth-child(4n+3){background:var(--navy-soft);}
+  .value-tile:nth-child(4n+4){background:#3D6E32;}
+  .value-tile h4{font-family:var(--serif);color:var(--paper);font-size:1.05rem;margin-bottom:.3em;}
+  .value-tile p{color:rgba(250,247,241,.78);font-size:.85rem;margin:0;}
+
+  /* activities */
+  .activity-list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--line);}
+  .activity-list li{
+    display:grid;grid-template-columns:28px 1fr;gap:16px;
+    padding:16px 0;border-bottom:1px solid var(--line);font-size:.98rem;
+  }
+  .activity-list li::before{
+    content:"";width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:8px;
+  }
+
+  /* membership */
+  .member-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media(max-width:820px){.member-cols{grid-template-columns:1fr;}}
+  .member-col h3{font-size:1.05rem;}
+  .member-col ul{margin:0;padding-left:18px;color:var(--ink-soft);font-size:.94rem;}
+  .member-col li{margin-bottom:8px;}
+  .member-col .tag{
+    display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:10px;
+  }
+  .join-panel{
+    margin-top:40px;background:var(--green-soft);border-radius:var(--radius);
+    padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .join-panel h3{margin:0 0 4px;}
+  .join-panel p{margin:0;color:var(--ink-soft);}
+
+  /* governance */
+  .committee-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+  .role-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;
+  }
+  .role-card .role-index{
+    font-family:var(--serif);font-size:1.6rem;color:var(--amber);line-height:1;margin-bottom:10px;display:block;
+  }
+  .role-card h4{font-size:1rem;margin-bottom:.4em;}
+  .role-card p{font-size:.88rem;color:var(--ink-soft);margin:0;}
+  .gov-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:36px 0;}
+  @media(max-width:820px){.gov-facts{grid-template-columns:repeat(2,1fr);}}
+  .gov-fact{background:var(--navy);color:var(--paper);border-radius:var(--radius);padding:20px;}
+  .gov-fact .num{font-family:var(--serif);font-size:1.7rem;color:var(--amber-soft);display:block;}
+  .gov-fact .lbl{font-size:.78rem;color:#B7C0CE;}
+  .gov-note{
+    margin-top:36px;border:1px dashed var(--green);background:var(--green-soft);
+    border-radius:var(--radius);padding:20px 22px;font-size:.94rem;
+  }
+  .gov-note a{color:var(--navy);font-weight:700;text-decoration:underline;text-decoration-color:var(--amber);}
+
+  /* team */
+  .dept-group{margin-bottom:38px;}
+  .dept-group:last-child{margin-bottom:0;}
+  .dept-label{
+    font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+  }
+  .dept-label::after{content:"";flex:1;height:1px;background:var(--line);}
+  .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:900px){.team-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.team-grid{grid-template-columns:1fr;}}
+  .team-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;display:flex;gap:14px;align-items:flex-start;
+  }
+  .avatar{
+    width:46px;height:46px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--paper);
+    background:var(--navy);
+  }
+  .team-grid .team-card:nth-child(3n+2) .avatar{background:var(--green);}
+  .team-grid .team-card:nth-child(3n+3) .avatar{background:var(--amber);color:var(--navy);}
+  .team-card h4{margin:0 0 2px;font-size:.98rem;font-family:var(--sans);font-weight:700;color:var(--navy);}
+  .team-card .role{font-size:.78rem;font-weight:600;color:var(--amber);margin-bottom:6px;display:block;}
+  .team-card p{margin:0;font-size:.86rem;color:var(--ink-soft);}
+  .team-intro{color:var(--ink-soft);max-width:66ch;}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+  @media(max-width:760px){.contact-grid{grid-template-columns:1fr;}}
+  .contact-line{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+  .contact-line .icon{width:34px;height:34px;flex:none;border-radius:50%;background:var(--amber-soft);
+    display:flex;align-items:center;justify-content:center;color:var(--amber);}
+  .contact-line h4{margin:0 0 2px;font-family:var(--sans);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);}
+  .contact-line p{margin:0;font-weight:600;}
+
+  footer{background:var(--navy);color:#B7C0CE;padding:44px 0 26px;font-size:.86rem;}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  footer .foot-brand{color:var(--paper);font-family:var(--serif);font-weight:700;}
+  footer .motto{color:var(--amber-soft);font-style:italic;font-family:var(--serif);}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#hero">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="24" width="10" height="10" rx="2" fill="#16233A"/>
+        <rect x="14" y="14" width="10" height="20" rx="2" fill="#4C8C3C"/>
+        <rect x="26" y="4" width="10" height="30" rx="2" fill="#D98A34"/>
+        <circle cx="7" cy="20" r="3.4" fill="#16233A"/>
+        <circle cx="19" cy="10" r="3.4" fill="#4C8C3C"/>
+        <circle cx="31" cy="0.5" r="3.4" fill="#D98A34"/>
+      </svg>
+      <span class="brand-word">somer</span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="mainnav" id="mainnav">
+      <a href="#about">About</a>
+      <a href="#objectives">What We Do</a>
+      <a href="#team">Our Team</a>
+      <a href="#membership">Membership</a>
+      <a href="#governance">Governance</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ STEP RAIL ============ -->
+<div class="steprail" id="steprail">
+  <div class="rail-item" data-step="1"><span class="dot"></span><span class="label">Research</span></div>
+  <div class="bar"></div>
+  <div class="rail-item" data-step="2"><span class="dot"></span><span class="label">Skills</span></div>
+  <div class="bar"></div>
+  <div class="rail-item" data-step="3"><span class="dot"></span><span class="label">Opportunity</span></div>
+  <div class="bar"></div>
+  <div class="rail-item" data-step="4"><span class="dot"></span><span class="label">Livelihood</span></div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Community-Based Organization · Kakuma, Turkana County</div>
+      <h1>Connecting research, skills, and <em>opportunity</em>, one step at a time.</h1>
+      <p class="lede">SOMER — Skills Opportunity for Marginalized and Emerging Regions — builds the systems that let refugees, host communities, youth, and women in Kakuma turn learning into sustainable livelihoods.</p>
+      <div class="hero-ctas">
+        <a href="#membership" class="btn btn-primary">Become a member</a>
+        <a href="#about" class="btn btn-ghost">Read our mission</a>
+      </div>
+      <p class="hero-motto">"Creating Space for Opportunity."</p>
+    </div>
+    <div class="steps-illustration reveal">
+      <div class="step-block s1"><div class="dot-figure"></div></div>
+      <div class="step-block s2"><div class="dot-figure"></div></div>
+      <div class="step-block s3"><div class="dot-figure"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" data-step="1">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Article 1 — Who We Are</div>
+      <h2>A system built on evidence, not assumptions</h2>
+      <p>SOMER is a community-based organization operating in Kakuma Refugee Camp, integrating research, skills development, and livelihood opportunities into one unified system of support for marginalized and displacement-affected communities.</p>
+    </div>
+    <div class="mission-strip reveal">
+      <div class="cell">
+        <h3>Mission</h3>
+        <p>To connect research, skills, and opportunity systems in order to enable sustainable livelihoods for marginalized and displacement-affected communities.</p>
+      </div>
+      <div class="cell">
+        <h3>Vision</h3>
+        <p>A world where individuals in marginalized and emerging regions have equitable access to opportunities to learn, grow, and sustain their livelihoods.</p>
+      </div>
+      <div class="cell">
+        <h3>Approach</h3>
+        <p>Systems-based and community-driven — every intervention is informed by evidence, responsive to real needs, and grounded in local context.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PURPOSE ============ -->
+<section id="purpose" class="band-alt" data-step="1">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Article 2 — Purpose</div>
+      <h2>Bridging the gap between learning and livelihood</h2>
+      <p>SOMER exists to close the space between education systems, skills acquisition, and access to sustainable economic opportunity — with particular attention to refugees, host communities, youth, and women.</p>
+    </div>
+    <div class="purpose-list reveal">
+      <div class="purpose-item"><div class="mark">01</div><p>Integrates research, skills development, and livelihood opportunities into one unified system of support, rather than treating them as separate programs.</p></div>
+      <div class="purpose-item"><div class="mark">02</div><p>Bridges gaps between education systems, skills acquisition pathways, and access to sustainable economic opportunities.</p></div>
+      <div class="purpose-item"><div class="mark">03</div><p>Promotes inclusive, equitable, and sustainable development, prioritizing marginalized populations.</p></div>
+      <div class="purpose-item"><div class="mark">04</div><p>Operates strictly on a non-profit basis — every resource is reinvested into its objectives and activities, never distributed to members.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OBJECTIVES ============ -->
+<section id="objectives" data-step="2">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Articles 4 &amp; 5 — Goal &amp; Objectives</div>
+      <h2>What we're building toward</h2>
+      <p>A sustainable system connecting research, skills, and opportunity for long-term socio-economic transformation.</p>
+    </div>
+    <div class="card-grid reveal">
+      <div class="card"><h4>Community-led research</h4><p>Conduct research so decisions and programs are informed by reliable data and evidence, not guesswork.</p></div>
+      <div class="card"><h4>Closing systemic gaps</h4><p>Identify and address gaps within education systems, skills pathways, and livelihood opportunities.</p></div>
+      <div class="card"><h4>Education access</h4><p>Support access to education and higher education through awareness, guidance, mentorship, and scholarship support.</p></div>
+      <div class="card"><h4>Mentorship &amp; coaching</h4><p>Prepare individuals for academic, vocational, and career opportunities through direct mentorship.</p></div>
+      <div class="card"><h4>Market-aligned skills</h4><p>Design and implement skills programs aligned with real market demand and economic opportunity.</p></div>
+      <div class="card"><h4>Entrepreneurship</h4><p>Support enterprise and income-generating initiatives that build self-reliance and economic empowerment.</p></div>
+      <div class="card"><h4>Institutional linkages</h4><p>Connect individuals, institutions, employers, and economic systems to strengthen opportunity pathways.</p></div>
+      <div class="card"><h4>Inclusion &amp; equity</h4><p>Ensure meaningful participation of marginalized populations in every program and activity.</p></div>
+      <div class="card"><h4>Partnerships</h4><p>Build coordination among NGOs, government, the private sector, and community groups.</p></div>
+      <div class="card"><h4>Continuous learning</h4><p>Keep adapting and innovating in every organizational approach and intervention.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VALUES ============ -->
+<section class="band" data-step="2">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Article 6 — Values</div>
+      <h2>What holds the system together</h2>
+    </div>
+    <div class="value-grid reveal">
+      <div class="value-tile"><h4>Integrity</h4><p>Honesty, transparency, and ethical conduct in all operations.</p></div>
+      <div class="value-tile"><h4>Inclusion</h4><p>Equal participation and representation of diverse groups.</p></div>
+      <div class="value-tile"><h4>Accountability</h4><p>Answerable to members, beneficiaries, partners, and stakeholders.</p></div>
+      <div class="value-tile"><h4>Collaboration</h4><p>Working with partners, communities, and institutions toward shared goals.</p></div>
+      <div class="value-tile"><h4>Innovation</h4><p>Creative, adaptive solutions to social and economic challenges.</p></div>
+      <div class="value-tile"><h4>Community Ownership</h4><p>Prioritizing community-driven solutions and local leadership.</p></div>
+      <div class="value-tile"><h4>Human Rights</h4><p>Upholding dignity, equality, and respect for every individual.</p></div>
+      <div class="value-tile"><h4>Sustainability</h4><p>Long-term impact and responsible use of resources.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACTIVITIES ============ -->
+<section id="activities" data-step="2">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Article 7 — Group Activities</div>
+      <h2>On the ground in Kakuma</h2>
+    </div>
+    <ul class="activity-list reveal">
+      <li>Community engagement forums, dialogues, and participatory planning sessions.</li>
+      <li>Research activities — surveys, assessments, monitoring, and evaluations.</li>
+      <li>Skills training in digital literacy, vocational trades, entrepreneurship, and research skills.</li>
+      <li>Support for access to higher education through mentorship, application support, and awareness programs.</li>
+      <li>Scholarship awareness and opportunity-access programs.</li>
+      <li>Livelihood and enterprise development initiatives.</li>
+      <li>Climate-smart and environmentally sustainable livelihood practices.</li>
+      <li>Human rights awareness and inclusion programs.</li>
+      <li>Partnerships, networking, and system coordination to strengthen impact.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section id="team" class="band" data-step="3">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Our People</div>
+      <h2>SOMER Team</h2>
+      <p class="team-intro" style="color:#B7C0CE;">A refugee-led, volunteer-driven team with structured roles across programs, research, education, and communications. Every member serves in a defined position, contributing to implementation, learning, and systems-building — reflecting strong community ownership and lived-experience leadership.</p>
+    </div>
+
+    <div class="reveal">
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Executive Leadership</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">MT</div><div><h4>Mohamed Talil Abdullahi</h4><span class="role">Founder &amp; Executive Director</span><p>Leads SOMER at the intersection of displacement, education, and systems change, grounded in lived experience and community-driven solutions.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Finance &amp; Operations</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">DA</div><div><h4>Debra Arot Lonyang'ale</h4><span class="role">Finance &amp; Operations Lead</span><p>Keeps SOMER's finance and operations running smoothly, with five+ years in development, coordination, and community engagement.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Programs &amp; Partnerships</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">JM</div><div><h4>Jelle Mohamed-Noor Hussein</h4><span class="role">Programs &amp; Partnerships Coordinator</span><p>Coordinates programs and partnerships that connect displacement-affected communities to skills and opportunity.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Research &amp; M&amp;E</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">RB</div><div><h4>Rashad Bukhari Kaftera</h4><span class="role">Research and M&amp;E Lead</span><p>Leads research and impact measurement, turning data into evidence that keeps programs informed and accountable.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Education &amp; Digital Skills</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">LI</div><div><h4>Lehamir Idriss Ali</h4><span class="role">Education &amp; Digital Skills Coordinator</span><p>Leads digital skills programming that prepares marginalized youth for real-world opportunity in a digital economy.</p></div></div>
+          <div class="team-card"><div class="avatar">CT</div><div><h4>Celina Tuizere Juma</h4><span class="role">Education Coordinator</span><p>Coordinates education programming and learning design grounded in inclusive, evidence-based classroom practice.</p></div></div>
+          <div class="team-card"><div class="avatar">MA</div><div><h4>Musa Abudamir Kafi</h4><span class="role">EiE Facilitator</span><p>Brings frontline Education in Emergencies facilitation with a learner-centered, community-rooted approach.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Community Engagement</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">MB</div><div><h4>Monica Achol Biar</h4><span class="role">Program Facilitator</span><p>Supports young people through training and mentorship to build skills, confidence, and pathways toward opportunity.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Communications &amp; Creative</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">AK</div><div><h4>Akeer</h4><span class="role">Creative &amp; Content Lead</span><p>Leads visual identity and creative content that tells SOMER's story with clarity and purpose.</p></div></div>
+        </div>
+      </div>
+
+      <div class="dept-group">
+        <div class="dept-label" style="color:var(--amber-soft);">Technology</div>
+        <div class="team-grid">
+          <div class="team-card"><div class="avatar">KY</div><div><h4>Kumi Yunis</h4><span class="role">IT Expert and Quality Assurance</span><p>Manages technology systems and quality assurance to keep SOMER's digital tools reliable and efficient.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERSHIP ============ -->
+<section id="membership" class="band-alt" data-step="3">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Article 8 — Membership</div>
+      <h2>Join the system</h2>
+      <p>Membership is open regardless of nationality, refugee or displacement status, ethnicity, gender, religion, or disability.</p>
+    </div>
+    <div class="member-cols reveal">
+      <div class="member-col">
+        <span class="tag">Who can join</span>
+        <h3>Eligibility</h3>
+        <ul>
+          <li>At least 18 years of age</li>
+          <li>Resides in Kenya — refugees, asylum seekers, and stateless persons with valid UNHCR or GoK documentation, and host community members</li>
+          <li>Supports SOMER's mission, vision, and values</li>
+          <li>Willing to abide by the Constitution</li>
+          <li>Application approved by the Management Committee within 14 days</li>
+        </ul>
+      </div>
+      <div class="member-col">
+        <span class="tag">Your rights</span>
+        <h3>As a member</h3>
+        <ul>
+          <li>Participate in all programs, activities, and meetings</li>
+          <li>Vote in General Meetings and elections</li>
+          <li>Stand for election as an office bearer</li>
+          <li>Access organizational information relevant to membership</li>
+          <li>Raise concerns and be heard by the Management Committee</li>
+        </ul>
+      </div>
+      <div class="member-col">
+        <span class="tag">Your commitment</span>
+        <h3>Responsibilities</h3>
+        <ul>
+          <li>Uphold the Constitution and decisions made at duly convened meetings</li>
+          <li>Attend meetings and participate actively</li>
+          <li>Respect fellow members and governance structures</li>
+          <li>Declare conflicts of interest where relevant</li>
+          <li>Sign the Member Commitment Declaration on admission</li>
+        </ul>
+      </div>
+    </div>
+    <div class="join-panel reveal">
+      <div>
+        <h3>Ready to sign the commitment declaration?</h3>
+        <p>Every member reads the Constitution, signs on admission, and joins the official register.</p>
+      </div>
+      <a href="mailto:info.somerafrica@gmail.com?subject=Membership%20Application%20-%20SOMER" class="btn btn-primary">Request a membership form</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GOVERNANCE ============ -->
+<section id="governance" data-step="4">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Articles 9–12 — Governance</div>
+      <h2>How SOMER is run</h2>
+      <p>A five-person Management Committee holds oversight and decision-making, elected for two-year terms and accountable to the full membership at every Annual General Meeting.</p>
+    </div>
+
+    <div class="gov-facts reveal">
+      <div class="gov-fact"><span class="num">2 yrs</span><span class="lbl">Term of office, renewable for one further term</span></div>
+      <div class="gov-fact"><span class="num">Monthly</span><span class="lbl">Management Committee meetings</span></div>
+      <div class="gov-fact"><span class="num">3 of 5</span><span class="lbl">Signatories on every financial transaction (2 of 3 required)</span></div>
+      <div class="gov-fact"><span class="num">3/4</span><span class="lbl">Quorum required for a committee meeting</span></div>
+    </div>
+
+    <div class="committee-grid reveal">
+      <div class="role-card"><span class="role-index">I</span><h4>Chairperson</h4><p>Presides over meetings, acts as official spokesperson, guides decision-making, and is a financial signatory.</p></div>
+      <div class="role-card"><span class="role-index">II</span><h4>Vice Chairperson</h4><p>Supports the Chairperson and assumes their duties in their absence, excluding financial signatory authority.</p></div>
+      <div class="role-card"><span class="role-index">III</span><h4>Secretary</h4><p>Maintains records, minutes, and the membership register; handles correspondence; a financial signatory.</p></div>
+      <div class="role-card"><span class="role-index">IV</span><h4>Vice Secretary</h4><p>Supports the Secretary and stands in for records and communication duties in their absence.</p></div>
+      <div class="role-card"><span class="role-index">V</span><h4>Treasurer</h4><p>Oversees all finances, budgets, and bank accounts; presents financial reports monthly; a financial signatory.</p></div>
+    </div>
+
+    <p class="reveal" style="margin-top:30px;color:var(--ink-soft);max-width:70ch;">
+      The Committee reflects diverse, inclusive representation across nationalities and genders. Decisions are made by simple majority, sensitive matters go to secret ballot, and any office bearer may be removed by a two-thirds vote at a General Meeting following a fair hearing.
+    </p>
+
+    <div class="gov-note reveal">
+      <strong>Current leadership:</strong> meet the people carrying out these roles day to day in the
+      <a href="#team">SOMER Team</a> section below. This governance overview reflects the Constitution adopted 13 October 2025; for the latest committee minutes and updates, see
+      <a href="https://somerr.netlify.app/" target="_blank" rel="noopener">somerr.netlify.app</a>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="band" data-step="4">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <div class="eyebrow">Get in touch</div>
+      <h2>Kakuma 2, Zone 1, Block 13</h2>
+      <p style="color:#B7C0CE;">Reach out about membership, partnerships, or the work we're doing across research, skills, and opportunity.</p>
+      <div style="margin-top:30px;">
+        <div class="contact-line">
+          <div class="icon">@</div>
+          <div><h4>Email</h4><p><a href="mailto:info.somerafrica@gmail.com">info.somerafrica@gmail.com</a></p></div>
+        </div>
+        <div class="contact-line">
+          <div class="icon">◎</div>
+          <div><h4>Location</h4><p>Kakuma 2, Zone 1 Block 13, Turkana County, Kenya</p></div>
+        </div>
+        <div class="contact-line">
+          <div class="icon">↗</div>
+          <div><h4>Governance updates</h4><p><a href="https://somerr.netlify.app/" target="_blank" rel="noopener">somerr.netlify.app</a></p></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="join-panel" style="background:var(--navy-soft);">
+        <div>
+          <h3 style="color:var(--paper);">Want to partner with SOMER?</h3>
+          <p style="color:#B7C0CE;">NGOs, institutions, and the private sector — let's coordinate on shared objectives.</p>
+        </div>
+        <a href="mailto:info.somerafrica@gmail.com?subject=Partnership%20Inquiry%20-%20SOMER" class="btn" style="background:var(--amber);color:var(--navy);">Start a conversation</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <span class="foot-brand">somer</span>
+      <div class="motto">"Creating Space for Opportunity."</div>
+    </div>
+    <div>© SOMER — Skills Opportunity for Marginalized and Emerging Regions. Kakuma, Turkana County, Kenya.</div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const hamburger = document.getElementById('hamburger');
+  const mainnav = document.getElementById('mainnav');
+  hamburger.addEventListener('click', () => mainnav.classList.toggle('open'));
+  mainnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mainnav.classList.remove('open')));
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Step rail activation
+  const railItems = document.querySelectorAll('.steprail .rail-item');
+  const stepSections = document.querySelectorAll('[data-step]');
+  const railIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const step = entry.target.getAttribute('data-step');
+        railItems.forEach(item => {
+          const itemStep = item.getAttribute('data-step');
+          item.classList.toggle('active', itemStep === step);
+          item.classList.toggle('done', Number(itemStep) < Number(step));
+        });
+      }
+    });
+  }, { threshold: 0.4, rootMargin: '-20% 0px -50% 0px' });
+  stepSections.forEach(s => railIo.observe(s));
+</script>
+</body>
+</html>
